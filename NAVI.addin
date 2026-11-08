@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Goes in C:\ProgramData\Autodesk\Revit\Addins\<year>\NAVI.addin
+  with the dll in C:\ProgramData\Autodesk\Revit\Addins\<year>\NAVI\NAVI.dll
+  The Assembly path is relative to this file.
+-->
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>NAVI - CAD Import Guard</Name>
+    <Assembly>NAVI\NAVI.dll</Assembly>
+    <FullClassName>NAVI.App</FullClassName>
+    <AddInId>a2bd4039-e7e7-4f9a-b577-354bbc7378ea</AddInId>
+    <VendorId>SAMBIM</VendorId>
+    <VendorDescription>SAMBIM</VendorDescription>
+  </AddIn>
+</RevitAddIns>

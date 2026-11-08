@@ -1,0 +1,130 @@
+<Window x:Class="NAVI.CadImportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CAD Import Warning"
+        Width="480" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        ShowInTaskbar="False" WindowStyle="ToolWindow"
+        FontFamily="Segoe UI" FontSize="12"
+        Background="{DynamicResource WindowBackground}"
+        Foreground="{DynamicResource Text}">
+
+    <Window.Resources>
+        <!-- Light-theme defaults so the designer renders; RevitTheme replaces these at runtime. -->
+        <SolidColorBrush x:Key="WindowBackground" Color="#F5F5F5" />
+        <SolidColorBrush x:Key="Surface" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="Text" Color="#1E1E1E" />
+        <SolidColorBrush x:Key="SubtleText" Color="#555B66" />
+        <SolidColorBrush x:Key="Border" Color="#C8CCD2" />
+        <SolidColorBrush x:Key="ButtonBackground" Color="#E6E8EB" />
+        <SolidColorBrush x:Key="ButtonHover" Color="#D7DADF" />
+        <SolidColorBrush x:Key="Accent" Color="#0696D7" />
+        <SolidColorBrush x:Key="AccentHover" Color="#0582BC" />
+        <SolidColorBrush x:Key="Warning" Color="#E08A00" />
+
+        <Style x:Key="DialogButton" TargetType="Button">
+            <Setter Property="Foreground" Value="{DynamicResource Text}" />
+            <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="16,6" />
+            <Setter Property="MinWidth" Value="110" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Chrome" CornerRadius="3"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ButtonHover}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource Accent}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource DialogButton}">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="{DynamicResource Accent}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource AccentHover}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="LinkButton" TargetType="Button">
+            <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <!-- Button bar -->
+        <Border DockPanel.Dock="Bottom" Background="{DynamicResource Surface}"
+                BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0" Padding="16,12">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="SecondaryButton" Style="{StaticResource DialogButton}" Click="OnSecondary"
+                        Content="Import anyway" />
+                <Button x:Name="PrimaryButton" Style="{StaticResource PrimaryButton}" Click="OnLinkInstead"
+                        Content="Link CAD instead" IsDefault="True" />
+            </StackPanel>
+        </Border>
+
+        <Grid Margin="20,18,20,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Warning glyph -->
+            <Viewbox Width="36" Height="36" VerticalAlignment="Top" Margin="0,2,14,0">
+                <Canvas Width="24" Height="24">
+                    <Path Fill="{DynamicResource Warning}" Data="M12,2 L23,21 L1,21 Z" />
+                    <Path Fill="#1E1E1E" Data="M11,9 H13 V15 H11 Z M11,17 H13 V19 H11 Z" />
+                </Canvas>
+            </Viewbox>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Hey, listen!" FontSize="11" Foreground="{DynamicResource SubtleText}" />
+                <TextBlock x:Name="HeadingText" Text="CAD Import Warning" FontSize="17" FontWeight="SemiBold" Margin="0,2,0,10" />
+
+                <TextBlock x:Name="BodyText" TextWrapping="Wrap" LineHeight="18"
+                           Text="CAD imports can slow project files down drastically.&#10;Best practice is to use Insert &gt; Link CAD instead." />
+
+                <Border x:Name="PolicyNote" Visibility="Collapsed" Margin="0,12,0,0" Padding="10,8"
+                        CornerRadius="3" Background="{DynamicResource Surface}"
+                        BorderBrush="{DynamicResource Warning}" BorderThickness="3,0,0,0">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="CAD imports are turned off by the ADT Team. Use Insert &gt; Link CAD instead." />
+                </Border>
+
+                <Button x:Name="DetailsToggle" Style="{StaticResource LinkButton}" Margin="0,12,0,0"
+                        HorizontalAlignment="Left" Click="OnToggleDetails" Content="Show details" />
+
+                <TextBlock x:Name="DetailsText" Visibility="Collapsed" TextWrapping="Wrap" Margin="0,8,0,0"
+                           LineHeight="18" Foreground="{DynamicResource SubtleText}"
+                           Text="Details text is set at runtime." />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>
